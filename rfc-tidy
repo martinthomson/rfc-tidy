@@ -72,21 +72,28 @@ class Tidy(xml.sax.handler.ContentHandler):
         return f"&#x{ord(s):x};"
 
     def flush(self, tag, start=None):
-        if Tidy.preserve(tag):
-            c = f"<![CDATA[{self.c}]]>"
+        if Tidy.preserve(tag) and self.state == "open" and start is None:
+            print(">", end="")
+            self.state = "pre"
+
+        if self.state == "pre":
+            print(f"<![CDATA[{self.c}]]>", end="")
+            self.nl = False
+            self.c = ""
+            return
+
+        c = "".join([Tidy.map_entity(a) for a in escape(self.c)])
+        if Tidy.textElement(tag):
+            if self.state == "open":
+                # The element is opening, so strip left is safe.
+                c = c.lstrip()
+            if start is None or not Tidy.inline(start):
+                # The element is closing, or the element that is starting
+                # isn't inline, so strip right is safe.
+                c = c.rstrip()
+            c = Tidy.pattern.sub(r"<bcp14>\1</bcp14>", c)
         else:
-            c = "".join([Tidy.map_entity(a) for a in escape(self.c)])
-            if Tidy.textElement(tag):
-                if self.state == "open":
-                    # The element is opening, so strip left is safe.
-                    c = c.lstrip()
-                if start is None or not Tidy.inline(start):
-                    # The element is closing, or the element that is starting
-                    # isn't inline, so strip right is safe.
-                    c = c.rstrip()
-                c = Tidy.pattern.sub(r"<bcp14>\1</bcp14>", c)
-            else:
-                c = c.strip()
+            c = c.strip()
 
         if c != "":
             if self.state == "open":
