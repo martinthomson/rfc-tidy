@@ -19,10 +19,11 @@ class Tidy(xml.sax.handler.ContentHandler):
     pattern = re.compile(
         r"\b((?:(?:MUST|SHOULD|SHALL)(?:\s+NOT)?)|(?:(?:NOT\s+)?RECOMMENDED)|MAY|OPTIONAL|REQUIRED)\b"
     )
+    eol = re.compile(r"(?:\s*(?:\r?\n|\r)\s*)+")
 
     def __init__(self):
         self.tags = []
-        self.nesting = 0
+        self.nesting = -1
         self.c = ""
         self.state = ""
 
@@ -94,6 +95,7 @@ class Tidy(xml.sax.handler.ContentHandler):
             c = Tidy.pattern.sub(r"<bcp14>\1</bcp14>", c)
         else:
             c = c.strip()
+        c = Tidy.eol.sub("\n" + ("  " * self.nesting), c)
 
         if c != "":
             if self.state == "open":
@@ -118,8 +120,8 @@ class Tidy(xml.sax.handler.ContentHandler):
 
         self.tags.append(tag)
         if not Tidy.inline(tag):
-            print("  " * self.nesting, end="")
             self.nesting = self.nesting + 1
+            print("  " * self.nesting, end="")
 
         print(f"<{tag}", end="")
         for name, value in attributes.items():
@@ -132,9 +134,9 @@ class Tidy(xml.sax.handler.ContentHandler):
         self.flush(self.tags.pop())
 
         if not Tidy.inline(tag):
-            self.nesting = self.nesting - 1
             if self.nl and not Tidy.inline(self.currentTag()):
                 print("  " * self.nesting, end="")
+            self.nesting = self.nesting - 1
         if self.state == "open":
             print("/>", end="")
         else:
