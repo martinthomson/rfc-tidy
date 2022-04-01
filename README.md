@@ -2,9 +2,6 @@
 
 A simple tool that cleans up RFC XML.
 
-This reads from stdin and writes to stdout.  It will also accept the input file
-as the first argument.
-
 ## Usage
 
 Install from pypi with:
