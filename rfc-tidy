@@ -33,6 +33,17 @@ class Tidy(xml.sax.handler.ContentHandler):
     def preserve(tag):
         return tag in ["artwork", "sourcecode"]
 
+    def major(tag):
+        return tag in [
+            "front",
+            "middle",
+            "back",
+            "section",
+            "references",
+            "figure",
+            "table",
+        ]
+
     def textElement(tag):
         return tag in [
             "annotation",
@@ -117,6 +128,9 @@ class Tidy(xml.sax.handler.ContentHandler):
             print(">", end="")
             if not Tidy.inline(tag):
                 print()
+
+        if Tidy.major(tag):
+            print()
 
         self.tags.append(tag)
         if not Tidy.inline(tag):
