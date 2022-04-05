@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 if __name__ == "__main__":
     setup(
         name="rfc-tidy",
-        version="0.1.0",
+        version="0.1.1",
         author="Martin Thomson",
         author_email="mt@lowentropy.net",
         scripts=["rfc-tidy"],
