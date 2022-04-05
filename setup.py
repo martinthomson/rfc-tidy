@@ -4,6 +4,12 @@ import os
 
 from setuptools import setup, find_packages
 
+# To release, edit this file to update the version and then
+# git tag -am v{version} v{version}; git push origin v{version}
+# rm -rf dist
+# python -m build
+# python -m twine upload dist/*
+
 if __name__ == "__main__":
     setup(
         name="rfc-tidy",
