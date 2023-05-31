@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 if __name__ == "__main__":
     setup(
         name="rfc-tidy",
-        version="0.1.1",
+        version="0.1.2",
         author="Martin Thomson",
         author_email="mt@lowentropy.net",
         scripts=["rfc-tidy"],
@@ -28,7 +28,7 @@ if __name__ == "__main__":
             "Programming Language :: Python",
         ],
         keywords="rfc ietf xml",
-        python_requires=">=3.6",
+        python_requires=">=3.7",
         install_requires=[],
         url="https://github.com/martinthomson/rfc-tidy",
         license="MIT",
