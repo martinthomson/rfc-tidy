@@ -27,3 +27,5 @@ Indents elements consistently.
 
 Replaces non-ASCII characters in text with XML numeric entities so that you
 don't miss them.
+
+Sorts attributes by name.
